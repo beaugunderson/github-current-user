@@ -1,19 +1,27 @@
 {
   "name": "github-current-user",
-  "version": "1.0.0",
   "description": "Verify the current GitHub user via their private keys",
-  "main": "github-current-user.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [
-    "github"
-  ],
+  "version": "1.0.0",
   "author": "Beau Gunderson <beau@beaugunderson.com>",
-  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/beaugunderson/github-current-user/issues"
+  },
   "dependencies": {
     "ghsign": "^1.0.6",
     "git-user-email": "^0.2.1",
     "request": "^2.55.0"
+  },
+  "homepage": "https://github.com/beaugunderson/github-current-user",
+  "keywords": [
+    "github"
+  ],
+  "license": "MIT",
+  "main": "github-current-user.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/beaugunderson/github-current-user.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }
