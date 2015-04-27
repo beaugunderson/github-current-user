@@ -1,5 +1,6 @@
 'use strict';
 
+var debug = require('debug')('github-current-user');
 var ghsign = require('ghsign');
 var gitUserEmail = require('git-user-email');
 var gitConfig = require('git-config-path');
@@ -15,8 +16,12 @@ var BASE_URL = 'https://api.github.com';
 var VERIFICATION_STRING = 'my voice is my passport';
 
 function userFromEmail(email, cb) {
+  var url = BASE_URL + '/search/users';
+
+  debug('GET', url);
+
   request.get({
-    url: BASE_URL + '/search/users',
+    url: url,
     json: true,
     qs: {
       q: email
@@ -31,8 +36,12 @@ function userFromEmail(email, cb) {
 }
 
 function userFromUsername(username, cb) {
+  var url = BASE_URL + '/users/' + username;
+
+  debug('GET', url);
+
   request.get({
-    url: BASE_URL + '/users/' + username,
+    url: url,
     json: true
   }, function (err, response, body) {
     if (err) {
@@ -47,8 +56,12 @@ function usernameFromConfig() {
   var config = parse.sync({cwd: '/', path: gitConfig});
 
   if (config && config.user) {
+    debug('username from .gitconfig', config.user.username);
+
     return config.user.username;
   }
+
+  debug('no username in .gitconfig');
 }
 
 var current = exports.current = function (cb) {
@@ -70,12 +83,18 @@ exports.verify = function (cb) {
     var sign = ghsign.signer(user.login);
     var verify = ghsign.verifier(user.login);
 
+    debug('signing with', user.login);
+
     sign(VERIFICATION_STRING, function (signError, signature) {
       if (signError) {
         return cb(signError);
       }
 
+      debug('verifying with', user.login);
+
       verify(VERIFICATION_STRING, signature, function (verifyError, valid) {
+        debug('valid', valid, 'username', user.login);
+
         cb(verifyError, valid, user.login);
       });
     });
