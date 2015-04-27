@@ -2,7 +2,6 @@
 
 var debug = require('debug')('github-current-user');
 var ghsign = require('ghsign');
-var gitUserEmail = require('git-user-email');
 var gitConfig = require('git-config-path');
 var parse = require('parse-git-config');
 
@@ -52,26 +51,25 @@ function userFromUsername(username, cb) {
   });
 }
 
-function usernameFromConfig() {
+var current = exports.current = function (cb) {
   var config = parse.sync({cwd: '/', path: gitConfig});
 
-  if (config && config.user) {
-    debug('username from .gitconfig', config.user.username);
-
-    return config.user.username;
-  }
-
-  debug('no username in .gitconfig');
-}
-
-var current = exports.current = function (cb) {
-  var username = usernameFromConfig();
-
+  var username = config && config.user && config.user.username;
   if (username) {
+    debug('username from .gitconfig', username);
     return userFromUsername(username, cb);
   }
 
-  userFromEmail(gitUserEmail(), cb);
+  var email = config && config.user && config.user.email;
+  if (email) {
+    debug('email from .gitconfig', email);
+    return userFromEmail(email, cb);
+  }
+
+  debug('missing info in .gitconfig, or no .gitconfig');
+  process.nextTick(function () {
+    cb(new Error('missing info in .gitconfig, or no .gitconfig'));
+  });
 };
 
 exports.verify = function (cb) {
