@@ -18,3 +18,12 @@ user.verify(function (err, verified, username) {
   console.log(verified, username);
 });
 ```
+
+
+## test out on the cli
+
+```
+$ npm i github-current-user -g
+$ github-current-user
+You are verified as maxogden
+```
