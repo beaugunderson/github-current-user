@@ -2,6 +2,8 @@
 
 var ghsign = require('ghsign');
 var gitUserEmail = require('git-user-email');
+var gitConfig = require('git-config-path');
+var parse = require('parse-git-config');
 
 var request = require('request').defaults({
   headers: {
@@ -28,7 +30,34 @@ function userFromEmail(email, cb) {
   });
 }
 
+function userFromUsername(username, cb) {
+  request.get({
+    url: BASE_URL + '/users/' + username,
+    json: true
+  }, function (err, response, body) {
+    if (err) {
+      return cb(err);
+    }
+
+    cb(null, body);
+  });
+}
+
+function usernameFromConfig() {
+  var config = parse.sync({cwd: '/', path: gitConfig});
+
+  if (config && config.user) {
+    return config.user.username;
+  }
+}
+
 var current = exports.current = function (cb) {
+  var username = usernameFromConfig();
+
+  if (username) {
+    return userFromUsername(username, cb);
+  }
+
   userFromEmail(gitUserEmail(), cb);
 };
 

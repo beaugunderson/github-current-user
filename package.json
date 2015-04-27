@@ -1,14 +1,16 @@
 {
   "name": "github-current-user",
   "description": "Verify the current GitHub user via their private keys",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "author": "Beau Gunderson <beau@beaugunderson.com>",
   "bugs": {
     "url": "https://github.com/beaugunderson/github-current-user/issues"
   },
   "dependencies": {
     "ghsign": "^1.0.6",
+    "git-config-path": "^0.1.0",
     "git-user-email": "^0.2.1",
+    "parse-git-config": "^0.3.0",
     "request": "^2.55.0"
   },
   "homepage": "https://github.com/beaugunderson/github-current-user",
