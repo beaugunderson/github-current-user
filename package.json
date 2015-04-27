@@ -3,6 +3,9 @@
   "description": "Verify the current GitHub user via their private keys",
   "version": "2.1.2",
   "author": "Beau Gunderson <beau@beaugunderson.com>",
+  "bin": {
+    "github-current-user": "cli.js"
+  },
   "bugs": {
     "url": "https://github.com/beaugunderson/github-current-user/issues"
   },
