@@ -1,7 +1,7 @@
 {
   "name": "github-current-user",
   "description": "Verify the current GitHub user via their private keys",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "author": "Beau Gunderson <beau@beaugunderson.com>",
   "bugs": {
     "url": "https://github.com/beaugunderson/github-current-user/issues"
