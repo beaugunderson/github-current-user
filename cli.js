@@ -2,7 +2,13 @@
 
 var user = require('./')
 
-user.verify(function (err, verified, username) {
+if(process.argv[2]) {
+  user.verifyUser(process.argv[2], output)
+} else {
+  user.verify(output)
+}
+
+function output (err, verified, username) {
   if (verified) console.log('You are verified as', username)
   else console.log('Could not verify you', err)
-})
+}
