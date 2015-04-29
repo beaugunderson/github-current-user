@@ -14,7 +14,7 @@
     "ghsign": "^1.2.2",
     "git-config-path": "^0.1.0",
     "github-username": "^1.1.1",
-    "parse-git-config": "^0.3.0",
+    "parse-git-config": "^0.3.1",
     "request": "^2.55.0"
   },
   "homepage": "https://github.com/beaugunderson/github-current-user",
