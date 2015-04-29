@@ -3,36 +3,10 @@
 var debug = require('debug')('github-current-user');
 var ghsign = require('ghsign');
 var gitConfig = require('git-config-path');
+var githubUsername = require('github-username');
 var parse = require('parse-git-config');
 
-var request = require('request').defaults({
-  headers: {
-    'User-Agent': 'github-current-user'
-  }
-});
-
-var BASE_URL = 'https://api.github.com';
 var VERIFICATION_STRING = 'my voice is my passport';
-
-function userFromEmail(email, cb) {
-  var url = BASE_URL + '/search/users';
-
-  debug('→ GET %s', url);
-
-  request.get({
-    url: url,
-    json: true,
-    qs: {
-      q: email
-    }
-  }, function (err, response, body) {
-    if (err || !body.items || !body.items.length) {
-      return cb(err);
-    }
-
-    cb(null, body.items[0].login);
-  });
-}
 
 var current = exports.current = function (cb) {
   var config = parse.sync({cwd: '/', path: gitConfig});
@@ -46,7 +20,7 @@ var current = exports.current = function (cb) {
   var email = config && config.user && config.user.email;
   if (email) {
     debug('email from .gitconfig: %s', email);
-    return userFromEmail(email, cb);
+    return githubUsername(email, cb);
   }
 
   debug('missing info in .gitconfig, or no .gitconfig');
