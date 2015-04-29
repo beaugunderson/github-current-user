@@ -17,7 +17,7 @@ var VERIFICATION_STRING = 'my voice is my passport';
 function userFromEmail(email, cb) {
   var url = BASE_URL + '/search/users';
 
-  debug('GET', url);
+  debug('→ GET %s', url);
 
   request.get({
     url: url,
@@ -30,24 +30,7 @@ function userFromEmail(email, cb) {
       return cb(err);
     }
 
-    cb(null, body.items[0]);
-  });
-}
-
-function userFromUsername(username, cb) {
-  var url = BASE_URL + '/users/' + username;
-
-  debug('GET', url);
-
-  request.get({
-    url: url,
-    json: true
-  }, function (err, response, body) {
-    if (err) {
-      return cb(err);
-    }
-
-    cb(null, body);
+    cb(null, body.items[0].login);
   });
 }
 
@@ -56,13 +39,13 @@ var current = exports.current = function (cb) {
 
   var username = config && config.user && config.user.username;
   if (username) {
-    debug('username from .gitconfig', username);
-    return userFromUsername(username, cb);
+    debug('username from .gitconfig: %s', username);
+    return cb(null, username);
   }
 
   var email = config && config.user && config.user.email;
   if (email) {
-    debug('email from .gitconfig', email);
+    debug('email from .gitconfig: %s', email);
     return userFromEmail(email, cb);
   }
 
@@ -72,34 +55,33 @@ var current = exports.current = function (cb) {
   });
 };
 
-exports.verify = function (cb) {
-  current(function (err, user) {
-    if (err || !user) {
-      return cb(err);
-    }
-    verifyUser(user.login, cb);
-  });
-};
+var verifyUser = exports.verifyUser = function (username, cb) {
+  var sign = ghsign.signer(username);
+  var verify = ghsign.verifier(username);
 
-exports.verifyUser = verifyUser;
-
-function verifyUser(login, cb) {
-  var sign = ghsign.signer(login);
-  var verify = ghsign.verifier(login);
-
-  debug('signing with', login);
+  debug('signing with "%s"', username);
 
   sign(VERIFICATION_STRING, function (signError, signature) {
     if (signError) {
       return cb(signError);
     }
 
-    debug('verifying with', login);
+    debug('verifying with "%s"', username);
 
     verify(VERIFICATION_STRING, signature, function (verifyError, valid) {
-      debug('valid', valid, 'username', login);
+      debug('valid: %s, username: %s', valid, username);
 
-      cb(verifyError, valid, login);
+      cb(verifyError, valid, username);
     });
   });
-}
+};
+
+exports.verify = function (cb) {
+  current(function (err, username) {
+    if (err || !username) {
+      return cb(err);
+    }
+
+    verifyUser(username, cb);
+  });
+};
