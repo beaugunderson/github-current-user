@@ -77,24 +77,29 @@ exports.verify = function (cb) {
     if (err || !user) {
       return cb(err);
     }
-
-    var sign = ghsign.signer(user.login);
-    var verify = ghsign.verifier(user.login);
-
-    debug('signing with', user.login);
-
-    sign(VERIFICATION_STRING, function (signError, signature) {
-      if (signError) {
-        return cb(signError);
-      }
-
-      debug('verifying with', user.login);
-
-      verify(VERIFICATION_STRING, signature, function (verifyError, valid) {
-        debug('valid', valid, 'username', user.login);
-
-        cb(verifyError, valid, user.login);
-      });
-    });
+    verifyUser(user.login, cb);
   });
 };
+
+exports.verifyUser = verifyUser;
+
+function verifyUser(login, cb) {
+  var sign = ghsign.signer(login);
+  var verify = ghsign.verifier(login);
+
+  debug('signing with', login);
+
+  sign(VERIFICATION_STRING, function (signError, signature) {
+    if (signError) {
+      return cb(signError);
+    }
+
+    debug('verifying with', login);
+
+    verify(VERIFICATION_STRING, signature, function (verifyError, valid) {
+      debug('valid', valid, 'username', login);
+
+      cb(verifyError, valid, login);
+    });
+  });
+}
