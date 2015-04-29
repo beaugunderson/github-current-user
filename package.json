@@ -1,7 +1,7 @@
 {
   "name": "github-current-user",
   "description": "Verify the current GitHub user via their private keys",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "author": "Beau Gunderson <beau@beaugunderson.com>",
   "bin": {
     "github-current-user": "cli.js"
