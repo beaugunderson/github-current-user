@@ -11,7 +11,8 @@ var VERIFICATION_STRING = 'my voice is my passport';
 var current = exports.current = function (cb) {
   var config = parse.sync({cwd: '/', path: gitConfig});
 
-  var username = config && config.user && config.user.username;
+  var username = config && ((config.user && config.user.username) ||
+                            (config.github && config.github.user));
   if (username) {
     debug('username from .gitconfig: %s', username);
     return cb(null, username);

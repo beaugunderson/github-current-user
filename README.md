@@ -3,11 +3,12 @@
 Get the current GitHub user and verify that they have access to a private key
 that's been authorized to that account.
 
-Uses the username in `user.username` or the email address in `user.email` of
-the user's `.gitconfig` and the private keys in in the user's `ssh-agent` with
-fallback to `~/.ssh/id_rsa` or `~/.ssh/id_dsa`.
+Uses the username in `user.username` or `github.user` or the email address in
+`user.email` of the user's `.gitconfig` and the private keys in in the user's
+`ssh-agent` with fallback to `~/.ssh/id_rsa` or `~/.ssh/id_dsa`.
 
-If the username is known, you can use `verifyUser` and pass it as the first argument which bypasses `.gitconfig` lookup work.
+If the username is known, you can use `verifyUser` and pass it as the first
+argument which bypasses `.gitconfig` lookup work.
 
 ### examples
 
@@ -30,8 +31,6 @@ user.verifyUser('beaugunderson', function (err, verified, username) {
   console.log(verified, username);
 });
 ```
-
-
 
 ## test out on the cli
 
